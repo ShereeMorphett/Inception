@@ -1,0 +1,10 @@
+build*/
+/obj*/
+obj*/
+/CMakeFiles*/
+.DS_Store
+*.json
+*.gch
+*.o
+.vscode
+.env
