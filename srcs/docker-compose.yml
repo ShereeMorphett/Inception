@@ -1,0 +1,50 @@
+# basic template for docker-compose file, will need tweaking
+
+
+
+# Define the version of Docker Compose file syntax being used - docker-compose version to check which is installed on school compse
+version: '3'
+
+
+# Each service has its own build context, restart policy, and network configuration.
+services:
+  nginx:
+    build:
+      context: ./nginx
+    restart: always
+    networks:
+      - my_network
+
+# The WordPress service depends on a custom build context and has associated volumes for database and website files.
+  wordpress:
+    build:
+      context: ./wordpress
+    restart: always
+    networks:
+      - my_network
+    volumes:
+      - wordpress_db:/var/lib/mysql
+      - wordpress_files:/var/www/html
+
+
+# The MariaDB service depends on a custom build context and has an associated volume for the WordPress database.
+  mariadb:
+    build:
+      context: ./mariadb
+    restart: always
+    networks:
+      - my_network
+    volumes:
+      - wordpress_db:/var/lib/mysql
+
+
+# Define a custom bridge network named "my_network" for inter-container communication.
+networks:
+  my_network:
+    driver: bridge
+
+
+# Define two volumes named "wordpress_db" and "wordpress_files" for persistent storage.
+volumes:
+  wordpress_db:
+  wordpress_files:
