@@ -5,15 +5,29 @@
 version: '3'
 
 
-# Each service has its own build context, restart policy, and network configuration.
+# # Each service has its own build context, restart policy, and network configuration.
+# services:
+#   nginx:
+#     build:
+#       context: ./requirements/nginx
+#       dockerfile: Dockerfile
+#     # restart: always
+#     # networks:
+#     #   - my_network
+
 services:
-  nginx:
+  my_nginx:
     build:
-      context: ./requirements/nginx
+      context: .
       dockerfile: Dockerfile
-    # restart: always
-    # networks:
-    #   - my_network
+    ports:
+      - "8080:8080"
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge
 
 # # The WordPress service depends on a custom build context and has associated volumes for database and website files.
 #   wordpress:
