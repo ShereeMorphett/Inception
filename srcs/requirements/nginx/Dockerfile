@@ -7,7 +7,7 @@ RUN apk update \
 RUN mkdir -p /var/www/html /var/log/nginx /var/run/nginx \
     && chown -R nginx:nginx /var/www/html /var/log/nginx /var/run/nginx
 
-COPY ./conf /etc/nginx/nginx_configuration.conf
+COPY ./conf /etc/nginx/nginx.conf
 COPY ./index.html /var/www/html/
 
 EXPOSE 8080
