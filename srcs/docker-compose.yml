@@ -6,25 +6,16 @@ version: '3'
 
 
 # # Each service has its own build context, restart policy, and network configuration.
-# services:
-#   nginx:
-#     build:
-#       context: ./requirements/nginx
-#       dockerfile: Dockerfile
-#     # restart: always
-#     # networks:
-#     #   - my_network
 
 services:
-  my_nginx:
+  nginx:
     build:
-      context: .
+      context: ./requirements/nginx
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     networks:
       - my_network
-
 networks:
   my_network:
     driver: bridge
@@ -32,7 +23,7 @@ networks:
 # # The WordPress service depends on a custom build context and has associated volumes for database and website files.
 #   wordpress:
 #     build:
-#       context: ./wordpress
+#       context:  ./requirements/wordpress
 #     restart: always
 #     networks:
 #       - my_network
@@ -44,7 +35,7 @@ networks:
 # # The MariaDB service depends on a custom build context and has an associated volume for the WordPress database.
 #   mariadb:
 #     build:
-#       context: ./mariadb
+#       context:  ./requirements/mariadb
 #     restart: always
 #     networks:
 #       - my_network
