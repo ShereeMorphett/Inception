@@ -15,8 +15,7 @@
 
 # RUN mkdir -p /run/nginx
 
-# # Expose port
-# EXPOSE 8080
+# EXPOSE 443
 
 # # Start nginx
 # CMD ["nginx", "-g", "daemon off;"]
