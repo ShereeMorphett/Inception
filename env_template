@@ -1,0 +1,8 @@
+SSL_KEY_NAME=my_key.key
+SSL_CERT_NAME=my_cert.crt
+SSL_COUNTRY=FI
+SSL_STATE=Uusimaa
+SSL_LOCATION=Helsinki
+SSL_ORGANIZATION=Hive
+SSL_ORG_UNIT=Inception
+SSL_COMMON_NAME=localhost
