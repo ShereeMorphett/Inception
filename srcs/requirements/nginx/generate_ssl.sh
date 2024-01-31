@@ -8,6 +8,10 @@ fi
 # Create the SSL directory if it doesn't exist
 mkdir -p /etc/nginx/ssl
 
+SSL_KEY_NAME="inception.key"
+SSL_CERT_NAME="inception.crt"
+
+
 # Check if SSL key and certificate already exist
 if [ ! -f /etc/nginx/ssl/${SSL_KEY_NAME} ] || [ ! -f /etc/nginx/ssl/${SSL_CERT_NAME} ]; then
     # Generate SSL key and certificate
