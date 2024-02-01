@@ -13,7 +13,7 @@ services:
       context: ./requirements/nginx
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "8080:443"
     networks:
       - my_network
 networks:
