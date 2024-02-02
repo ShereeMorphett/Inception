@@ -1,25 +1,3 @@
-
-# FROM alpine:3.18.5
-
-# RUN apk update && \
-#     apk add --no-cache openssl nginx
-
-# COPY ./generate_ssl.sh /usr/local/bin/generate_ssl.sh
-# RUN chmod +x /usr/local/bin/generate_ssl.sh
-
-# RUN mkdir -p /etc/nginx/ssl
-
-# COPY ./conf/nginx.conf /etc/nginx/nginx.conf
-
-# COPY ./index.html /usr/share/nginx/html/index.html
-
-# RUN mkdir -p /run/nginx
-
-# EXPOSE 443
-
-# # Start nginx
-# CMD ["nginx", "-g", "daemon off;"]
-
 FROM alpine:3.18.5
 
 RUN apk update \
