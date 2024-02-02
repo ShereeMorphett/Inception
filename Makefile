@@ -34,6 +34,10 @@ setup:
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d
 
+.PHONY: restart
+restart: clean setup
+	@echo $(GREEN) "Containers restarted successfully" $(NC)
+
 #Debugging compose file
 .PHONY: debug
 debug: 
