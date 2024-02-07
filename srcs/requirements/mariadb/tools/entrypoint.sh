@@ -15,5 +15,4 @@ done
 # Stop MariaDB
 mysqladmin shutdown
 
-# Start MariaDB in normal mode
 exec mysqld_safe
