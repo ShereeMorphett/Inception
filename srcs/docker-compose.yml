@@ -42,11 +42,12 @@ networks:
 
 
 # # Define two volumes named "wordpress_db" and "wordpress_files" for persistent storage.
+#Your volumes will be available in the /home/login/data folder of thehost machine using Docker
 volumes:
   # mariadb:
   #   name: mariadb
   #   driver: local
-  #   driver_opts:
+  #   driver_opts: /home/smorphet/data/ this needs to be set up on the VM ??
   #     device: 
   #     o: bind
   #     type: none
