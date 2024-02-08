@@ -6,7 +6,7 @@ mysqld_safe --skip-networking &
 
 # Wait for the MariaDB server to start
 until mysqladmin ping &>/dev/null; do
-    echo -n "."; sleep 1
+    echo -n "./n"; sleep 1
 done
 
 # Run the setup script to create the WordPress database and user
