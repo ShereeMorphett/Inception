@@ -4,8 +4,8 @@
 .DEFAULT_GOAL := help
 
 # Variables
-DOCKER_COMPOSE := docker-compose                           # Command for Docker Compose
-#DOCKER_COMPOSE := /path/to/docker-compose
+ENV_FILE	=	./srcs/.env
+DOCKER_COMPOSE := docker-compose --env-file $(ENV_FILE)      # Command for Docker Compose
 
 DOCKER_COMPOSE_FILE := srcs/docker-compose.yml              # Path to Docker Compose file
 RED='\033[0;31m'
@@ -49,4 +49,8 @@ debug:
 
 .PHONY: clean
 clean:
+	@echo $(YELLOW) "Stopping and removing Docker containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception down
+	@echo $(YELLOW) "Releasing port 443..." $(NC)
+	@PID=`sudo lsof -t -i:443`; if [ -n "$$PID" ]; then sudo kill -9 $$PID; fi
+

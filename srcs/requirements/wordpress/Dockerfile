@@ -2,16 +2,19 @@
 # syntax=docker/dockerfile:1
 FROM alpine:3.18
 
+RUN apk update && apk add --no-cache --update curl bash vim mariadb-client php php-phar php-json php-curl php-fpm php-mysqli php-iconv
 
-RUN apk update && \
-	apk add --no-cache bash
+RUN	adduser -S nginx &&	addgroup -S nginx
+COPY conf/www.conf /etc/php7/php-fpm.d/www.conf
 
-COPY conf/wp-config.php php/7.3/fpm/pool.d/
-# Add a script that prints with color
+# installs wordpress CLI
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar
+RUN cp wp-cli.phar /usr/bin/wp
 
 ADD tools/entrypoint.sh /entrypoint.sh
 
-RUN chmod +x /entrypoint.sh
+WORKDIR /var/www/html/wordpress
 
-# Set the entrypoint script as the default command
-CMD ["/entrypoint.sh"]
+ADD tools/config.sh /tmp/config.sh
+ENTRYPOINT [ "sh", "/tmp/config.sh" ]
