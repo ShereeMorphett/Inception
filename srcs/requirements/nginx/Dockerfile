@@ -1,8 +1,8 @@
-FROM alpine:3.18
+FROM alpine:3.18.6
 
 RUN apk update \
     && apk add --no-cache openssl && apk add nginx \
-	&& adduser -D -g 'www' www && \
+    && adduser -D -g 'www' www && \
     mkdir /www && \
     chown -R www:www /var/lib/nginx && \
     chown -R www:www /www
@@ -11,7 +11,7 @@ RUN apk update \
 RUN mkdir /etc/nginx/ssl
 
 RUN  openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/inception.key \
-	-out /etc/nginx/ssl/inception.crt -sha256 -days 365 \
+    -out /etc/nginx/ssl/inception.crt -sha256 -days 365 \
     -subj "/C=FI/ST=Uusimaa/L=Helsinki/O=Hive/OU=smorphet/CN=smorphet.42.fr"
 
 RUN mkdir -p /var/www/html /var/log/nginx /var/run/nginx \

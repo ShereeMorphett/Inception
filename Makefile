@@ -51,6 +51,4 @@ debug:
 clean:
 	@echo $(YELLOW) "Stopping and removing Docker containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception down
-	@echo $(YELLOW) "Releasing port 443..." $(NC)
-	@PID=`sudo lsof -t -i:443`; if [ -n "$$PID" ]; then sudo kill -9 $$PID; fi
 

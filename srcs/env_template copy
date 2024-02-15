@@ -18,3 +18,11 @@ WORDPRESS_EMAIL=smorphet@student.42.fr
 
 # DOMAIN
 DOMAIN_NAME=smorphet.42.fr
+
+#MYSQL setup
+
+MYSQL_HOSTNAME=mariadb
+MYSQL_DATABASE=wordpress
+MYSQL_USER=llescure
+MYSQL_PASSWORD=new1234
+MYSQL_ROOT_PASSWORD=root4life

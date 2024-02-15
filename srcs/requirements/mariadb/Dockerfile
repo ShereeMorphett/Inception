@@ -1,21 +1,25 @@
-FROM alpine:3.18.5
+FROM alpine:3.18.6
 
-# Install required utilities
+# Install MariaDB server and client
 RUN apk update && \
-	apk add --no-cache bash mariadb mariadb-client 
-	# mysql-server 
+    apk add mariadb mariadb-client && \
+    rm -rf /var/cache/apk/* && \
+    mkdir -p /var/run/mysqld && \
+    chown -R mysql:mysql /var/run/mysqld && \
+    chmod 777 /var/run/mysqld
 
-# Add a script that prints with color
-ADD tools/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# subject requires DB and wordpress to be on this pot
+# Expose the MySQL port
 EXPOSE 3306
 
-# winging this the paths etc could be soo wrong!
-COPY conf/50-server.conf /etc/mariadb/50-server.conf  
-RUN chmod 644 /etc/mariadb/50-server.conf
+# Copy entrypoint script into the container
+COPY ./tools/entrypoint.sh /usr/local/bin/
+COPY ./conf/50-server.conf /etc/mariadb/50-server.conf
 
-# Set the entrypoint script as the default command
-CMD ["/entrypoint.sh"]
+# Set the entrypoint script as executable
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
+# Set the entrypoint script as the entry point for the container
+ENTRYPOINT ["entrypoint.sh"]
+
+# Command to launch MariaDB and enable the database to listen globally
+CMD ["mysqld", "--bind-address=0.0.0.0"]

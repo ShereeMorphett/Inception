@@ -1,20 +1,39 @@
+FROM alpine:3.18.6
 
-# syntax=docker/dockerfile:1
-FROM alpine:3.18
+RUN apk update \
+    && apk add --no-cache \
+        php \
+        php-fpm \
+        php-mysqli \
+        php-phar \
+        php-mbstring \
+        curl \
+        libcurl \
+        php-curl \
+        libzip \
+        php-zip \
+        mariadb-client
 
-RUN apk update && apk add --no-cache --update curl bash vim mariadb-client php php-phar php-json php-curl php-fpm php-mysqli php-iconv
+# Command line tools for WordPress, you may not need wget anymore
+ADD https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar /usr/local/bin/wp
 
-RUN	adduser -S nginx &&	addgroup -S nginx
-COPY conf/www.conf /etc/php7/php-fpm.d/www.conf
+RUN chmod +x /usr/local/bin/wp
 
-# installs wordpress CLI
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x wp-cli.phar
-RUN cp wp-cli.phar /usr/bin/wp
+RUN mkdir -p /var/www/html
 
-ADD tools/entrypoint.sh /entrypoint.sh
+# WORKDIR /var/www/html/
+# # Expose the PHP FPM port
+# EXPOSE 9000
 
-WORKDIR /var/www/html/wordpress
+# Temporary infinite loop script to allow testing in the image
+COPY ./tools/config.sh /bin/config.sh
 
-ADD tools/config.sh /tmp/config.sh
-ENTRYPOINT [ "sh", "/tmp/config.sh" ]
+RUN chmod +x /bin/config.sh
+
+ENTRYPOINT ["/bin/config.sh"]
+
+WORKDIR /var/www/html/
+
+EXPOSE 9000
+# may be different on VM
+CMD ["/usr/sbin/php-fpm81", "-F", "-R"] 
