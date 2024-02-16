@@ -4,14 +4,10 @@ if [ -f ./wordpress/wp-config.php ]
 then
 	echo "wordpress already downloaded"
 else
-	#Download wordpress
+
 	wget https://wordpress.org/latest.tar.gz
 	tar -xzvf latest.tar.gz
 	rm -rf latest.tar.gz
-
-	#Update configuration file
-	rm -rf /etc/php81/php-fpm.d/www.conf
-	mv ./www.conf /etc/php81/php-fpm.d/www.conf
 
 	#Inport env variables in the config file
 	cd /var/www/html/wordpress
@@ -19,10 +15,12 @@ else
 	sed -i "s/password_here/$WORDPRESS_DB_PASSWORD/g" wp-config-sample.php
 	sed -i "s/localhost/$MYSQL_HOST/g" wp-config-sample.php
 	sed -i "s/database_name_here/$WORDPRESS_DB_NAME/g" wp-config-sample.php
-	mv wp-config-sample.php wp-config.php
+	# mv wp-config-sample.php wp-config.php
 fi
 
-exec "$@"
+exec /usr/sbin/php-fpm81 -F
+
+
 
 # #!/bin/sh
 

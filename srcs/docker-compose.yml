@@ -62,7 +62,8 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/sheree/Desktop/Inception/temp_volumes/mariadb-data
+      device: /home/smorphet/data/temp_volumes/mariadb-data
+      # device: /Users/smorphet/data/temp_volumes/mariadb-data
 
   wordpress-data:
     name: wordpress-data
@@ -70,4 +71,5 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/sheree/Desktop/Inception/temp_volumes/wordpress-data
+      device: /home/smorphet/data/temp_volumes/wordpress-data
+      # device: /Users/smorphet/data/temp_volumes/wordpress-data

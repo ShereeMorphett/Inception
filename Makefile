@@ -25,11 +25,17 @@ help:
 	@echo "  clean      - Clean up resources (stop and remove Docker containers)"
 	@echo "  help       - Display this help message"
 	@echo "  Debug      - Display the compose content and attempt to build containers"
+	@echo "  Total clean      - Clean up resources (stop, remove Docker containers AND delete volumes)"
 
+
+.PHONY: create_dirs
+create_dirs:
+	# @mkdir -p /Users/smorphet/data/temp_volumes/mariadb-data /Users/smorphet/data/temp_volumes/wordpress-data
+	@mkdir -p /home/smorphet/data/temp_volumes/mariadb-data /home/smorphet/data/temp_volumes/wordpress-data
 
 # Build Docker images and start Docker containers in the background
 .PHONY: setup
-setup:
+setup: create_dirs
 	@echo $(GREEN) "Building and starting containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d
@@ -51,4 +57,9 @@ debug:
 clean:
 	@echo $(YELLOW) "Stopping and removing Docker containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception down
+
+.PHONY: fclean
+fclean: clean
+	@echo $(YELLOW) "Removing temp_volumes directory..." $(NC)
+	@rm -rf /Users/smorphet/data/temp_volumes
 

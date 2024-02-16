@@ -1,6 +1,6 @@
 FROM alpine:3.18.6
 
-# Install MariaDB server and client
+
 RUN apk update && \
     apk add mariadb mariadb-client && \
     rm -rf /var/cache/apk/* && \
