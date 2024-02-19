@@ -11,6 +11,7 @@ services:
     volumes:
       - wordpress-data:/var/www/html
     restart: always
+    init: true
 
   wordpress:
     container_name: Inception_Wordpress
@@ -35,6 +36,7 @@ services:
       WORDPRESS_PASSWORD: ${WORDPRESS_PASSWORD}
       WORDPRESS_EMAIL: ${WORDPRESS_EMAIL}
     restart: always
+    init: true
 
   mariadb:
     container_name: Inception_Mariadb
@@ -50,6 +52,7 @@ services:
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
       WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
     restart: always
+    init: true
 
 networks:
   my_network:

@@ -7,7 +7,7 @@ RUN apk update \
     chown -R www:www /var/lib/nginx && \
     chown -R www:www /www
 
-# Nginx SSL
+# Nginx
 RUN mkdir /etc/nginx/ssl
 
 RUN  openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/inception.key \
@@ -15,15 +15,18 @@ RUN  openssl req -x509 -nodes -newkey rsa:4096 -keyout /etc/nginx/ssl/inception.
     -subj "/C=FI/ST=Uusimaa/L=Helsinki/O=Hive/OU=smorphet/CN=smorphet.42.fr"
 
 RUN mkdir -p /var/www/html /var/log/nginx /var/run/nginx \
-    && chown -R nginx:nginx /var/www/html /var/log/nginx /var/run/nginx
+    && chown -R www:www /var/www/html /var/log/nginx /var/run/nginx
 
 # Copy Nginx configuration
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/default.conf /etc/nginx/http.d/default.conf
 
-COPY ./index.html /usr/share/nginx/html/index.html
+COPY index.html /usr/share/nginx/html/index.html
 
 # Nginx config
 RUN mkdir -p /run/nginx
+
+RUN sed -i 's/user nginx/user www www/' /etc/nginx/nginx.conf && \ 
+	sed -i 's/ssl_protocols TLSv1.1 TLSv1.2 TLSv1.3;/ssl_protocols TLSv1.2 TLSv1.3;/'  /etc/nginx/nginx.conf
 
 EXPOSE 443
 

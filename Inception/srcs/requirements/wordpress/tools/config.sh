@@ -1,14 +1,16 @@
 #!/bin/sh
 
+#now add a waiting timer to wait for maria db
+
 if [ -f ./wordpress/wp-config.php ]
 then
 	echo "wordpress already downloaded"
 else
 
-	wget https://wordpress.org/latest.tar.gz
-	tar -xzvf latest.tar.gz
-	rm -rf latest.tar.gz
-
+	wp core download --allow-root
+	
+	#wp create the config with wp config creat && wp core install ......
+	#wp user create and then set themes etc from here and set options
 	#Inport env variables in the config file
 	cd /var/www/html/wordpress
 	sed -i "s/username_here/$WORDPRESS_DB_USER/g" wp-config-sample.php
@@ -17,7 +19,8 @@ else
 	sed -i "s/database_name_here/$WORDPRESS_DB_NAME/g" wp-config-sample.php
 	# mv wp-config-sample.php wp-config.php
 fi
-
+chown -R www:www /var/www/html
+chmod -R 775 /var/www/html
 exec /usr/sbin/php-fpm81 -F
 
 
