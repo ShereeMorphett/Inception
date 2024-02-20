@@ -38,7 +38,7 @@ create_dirs:
 setup: create_dirs
 	@echo $(GREEN) "Building and starting containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up #-d
 
 .PHONY: restart
 restart: clean setup

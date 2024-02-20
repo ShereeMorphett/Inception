@@ -12,7 +12,8 @@ RUN apk update \
         php-curl \
         libzip \
         php-zip \
-        mariadb-client
+        mariadb-client \
+	wget
 
 RUN adduser -D -g 'www' www && mkdir -p /www && chown -R www:www /www
 
