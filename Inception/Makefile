@@ -26,6 +26,7 @@ help:
 	@echo "  help       - Display this help message"
 	@echo "  Debug      - Display the compose content and attempt to build containers"
 	@echo "  fclean      - Clean up resources (stop, remove Docker containers AND delete volumes)"
+	@echo "  start-<service> - Start a specific Docker service (e.g., start-wordpress)"
 
 .PHONY: add_servername
 add_servername:
@@ -59,6 +60,11 @@ debug:
 	@echo $(GREEN) "Building and starting containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d
+
+.PHONY: start-%
+start-%:
+	@echo $(GREEN) "Starting Docker service: $*" $(NC)
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d $*
 
 .PHONY: clean
 clean:

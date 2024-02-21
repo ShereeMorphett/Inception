@@ -1,6 +1,6 @@
 services:
   nginx:
-    container_name: Inception_Nginx
+    container_name: nginx
     build:
       context: ./requirements/nginx
       dockerfile: Dockerfile
@@ -14,7 +14,7 @@ services:
     init: true
 
   wordpress:
-    container_name: Inception_Wordpress
+    container_name: wordpress
     build:
       context:  ./requirements/wordpress
     networks:
@@ -39,7 +39,7 @@ services:
     init: true
 
   mariadb:
-    container_name: Inception_Mariadb
+    container_name: mariadb
     build:
       context:  ./requirements/mariadb
     networks:
@@ -66,7 +66,6 @@ volumes:
       type: none
       o: bind
       device: /home/smorphet/data/temp_volumes/mariadb-data
-      # device: /Users/smorphet/data/temp_volumes/mariadb-data
 
   wordpress-data:
     name: wordpress-data
@@ -75,4 +74,3 @@ volumes:
       type: none
       o: bind
       device: /home/smorphet/data/temp_volumes/wordpress-data
-      # device: /Users/smorphet/data/temp_volumes/wordpress-data
