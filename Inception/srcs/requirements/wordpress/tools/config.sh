@@ -37,9 +37,9 @@ cd /var/www/html/
 
 # WordPress setup commands
 wp core download --allow-root
-wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PASSWORD --dbhost=mariadb --path=/var/www/html/ --force
-wp core install --url=$DOMAIN_NAME --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN_USER --admin_password=$WORDPRESS_ADMIN_PASSWORD --admin_email=$WORDPRESS_ADMIN_EMAIL --skip-email --path=/var/www/html/ --allow-root
-wp user create $WORDPRESS_USER $WORDPRESS_EMAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/html/
+wp config create --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_USER_PASSWORD --dbhost=mariadb --path=/var/www/html/ --force
+wp core install --url=$DOMAIN_NAME --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL --skip-email --path=/var/www/html/ --allow-root
+wp user create $WP_USER $WP_USER_EMAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/html/
 wp theme install twentysixteen --activate --allow-root
 wp plugin update --all
 wp option update siteurl "https://$DOMAIN_NAME"
