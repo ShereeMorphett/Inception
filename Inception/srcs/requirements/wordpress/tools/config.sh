@@ -1,34 +1,53 @@
 #!/bin/sh
 
-while ! wget --spider -q mariadb:3306; do
-    echo "Waiting for database connection..."
-    sleep 5
+# Maximum number of retries
+MAX_RETRIES=5
+# Sleep duration between retries (in seconds)
+RETRY_INTERVAL=5
+# Counter to track the number of attempts
+attempt=0
+
+# Function to check if mariadb is available
+check_mariadb() {
+    wget --spider -q mariadb:3306
+}
+
+# Wait for mariadb to become available
+while [ $attempt -lt $MAX_RETRIES ]; do
+    if check_mariadb; then
+        echo "Database connection successful."
+        break
+    else
+        echo "Waiting for database connection..."
+        sleep $RETRY_INTERVAL
+    fi
+    attempt=$((attempt + 1))
 done
 
-mkdir -p var/www/html/wordpress  /run/php/
-cd /var/www/html/
-# if [ ! -f "/var/www/html/.wordpress_installed" ]; then
-	#Download wordpress files
- 	wp core download --allow-root
-	#create config with wp-cli
-	wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PASSWORD --dbhost=mariadb --path=/var/www/html/ --force
-	# install wordpress
-	wp core install --url=$DOMAIN_NAME --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN_USER --admin_password=$WORDPRESS_ADMIN_PASSWORD --admin_email=$WORDPRESS_ADMIN_EMAIL --skip-email --path=/var/www/html/ --allow-root
-	#Create user
- 	wp user create $WORDPRESS_USER $WORDPRESS_EMAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/html/
-	# install themes and plugins
-	wp theme install twentysixteen --activate --allow-root
-	wp plugin update --all
- 	# 
-	wp option update siteurl "https://$DOMAIN_NAME"
-	wp option update home "https://$DOMAIN_NAME"
-	touch /var/www/html/.wordpress_installed
-# else
-# 	echo "wordpress already downloaded and setup"
-# fi
+# Check if maximum retries reached
+if [ $attempt -eq $MAX_RETRIES ]; then
+    echo "Maximum retries reached. Exiting..."
+    exit 1
+fi
 
+# Proceed with the script
+
+mkdir -p var/www/html/wordpress /run/php/
+cd /var/www/html/
+
+# WordPress setup commands
+wp core download --allow-root
+wp config create --dbname=$WORDPRESS_DB_NAME --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PASSWORD --dbhost=mariadb --path=/var/www/html/ --force
+wp core install --url=$DOMAIN_NAME --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN_USER --admin_password=$WORDPRESS_ADMIN_PASSWORD --admin_email=$WORDPRESS_ADMIN_EMAIL --skip-email --path=/var/www/html/ --allow-root
+wp user create $WORDPRESS_USER $WORDPRESS_EMAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/html/
+wp theme install twentysixteen --activate --allow-root
+wp plugin update --all
+wp option update siteurl "https://$DOMAIN_NAME"
+wp option update home "https://$DOMAIN_NAME"
+
+# Change ownership and permissions
 chown -R www:www /var/www/html
 chmod -R 775 /var/www/html
 
-#Run php-fpm in foreground
+# Run php-fpm in foreground
 exec /usr/sbin/php-fpm81 -F

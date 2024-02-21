@@ -1,12 +1,12 @@
 #!/bin/sh
 
 # make sure environment vars are set
-if [ -z "$MYSQL_ROOT_PASSWORD" ]; then
-  echo "Error: MYSQL_ROOT_PASSWORD environment variable is not set."
+if [ -z "$MARIADB_ROOT_PASSWORD" ]; then
+  echo "Error: MARIADB_ROOT_PASSWORD environment variable is not set."
   exit 1
 fi
-if [ -z "$WORDPRESS_DB_USER" ] || [ -z "$MYSQL_ROOT_PASSWORD" ]; then
-  echo "Error: DB_USER and/ or MYSQL_ROOT_PASSWORD environment variable is not set."
+if [ -z "$DB_USER" ] || [ -z "$MARIADB_ROOT_PASSWORD" ]; then
+  echo "Error: DB_USER and/ or MARIADB_ROOT_PASSWORD environment variable is not set."
   exit 1
 fi
 

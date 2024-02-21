@@ -6,7 +6,7 @@
 # Variables
 ENV_FILE	=	./srcs/.env
 DOCKER_COMPOSE := docker-compose --env-file $(ENV_FILE)      # Command for Docker Compose
-
+DATA_PATH = /home/smorphet/data
 DOCKER_COMPOSE_FILE := srcs/docker-compose.yml              # Path to Docker Compose file
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -26,20 +26,10 @@ help:
 	@echo "  help       - Display this help message"
 	@echo "  Debug      - Display the compose content and attempt to build containers"
 	@echo "  fclean      - Clean up resources (stop, remove Docker containers AND delete volumes)"
-	@echo "  start-<service> - Start a specific Docker service (e.g., start-wordpress)"
-
-.PHONY: add_servername
-add_servername:
-	if ! grep -q "smorphet.42.fr" /etc/hosts; then \
-		sudo echo "127.0.0.1 smorphet.42.fr" >> /etc/hosts; \
-	fi
-	if ! grep -q "www.smorphet.42.fr" /etc/hosts; then \
-		sudo echo "127.0.0.1    www.smorphet.42.fr" >> /etc/hosts; \
-	fi
 
 .PHONY: create_dirs
 create_dirs:
-	@mkdir -p /home/smorphet/data/temp_volumes/mariadb-data /home/smorphet/data/temp_volumes/wordpress-data
+	@mkdir -p /home/smorphet/data/mariadb-data /home/smorphet/data/wordpress-data
 
 # Build Docker images and start Docker containers in the background
 .PHONY: setup
@@ -47,6 +37,7 @@ setup: create_dirs
 	@echo $(GREEN) "Building and starting containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up #-d
+	@echo $(GREEN) "Containers restarted successfully" $(NC)
 
 .PHONY: restart
 restart: clean setup
@@ -61,10 +52,10 @@ debug:
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d
 
-.PHONY: start-%
-start-%:
-	@echo $(GREEN) "Starting Docker service: $*" $(NC)
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d $*
+.PHONY: stop
+stop:
+	docker compose -f srcs/docker-compose.yml -p ${PROJECT_NAME} stop
+	@echo $(GREEN) "Containers restarted successfully" $(NC)
 
 .PHONY: clean
 clean:
@@ -72,7 +63,8 @@ clean:
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception down
 
 .PHONY: fclean
-fclean: clean
-	@echo $(YELLOW) "Removing temp_volumes directory..." $(NC)
-	@rm -rf /Users/smorphet/data/temp_volumes
 
+fclean: clean
+	@docker volume rm --force wordpress-data
+	@docker volume rm --force mariadb-data
+	@rm -rf $(DATA_PATH)/mariadb-data $(DATA_PATH)/wordpress-data

@@ -1,76 +1,59 @@
 services:
   nginx:
-    container_name: nginx
-    build:
-      context: ./requirements/nginx
-      dockerfile: Dockerfile
     ports:
       - "443:443"
+    image: nginx
+    container_name: nginx_c
+    build: ./requirements/nginx
     networks:
-      - my_network
+      - mynetwork
+    restart: always
     volumes:
       - wordpress-data:/var/www/html
-    restart: always
-    init: true
-
-  wordpress:
-    container_name: wordpress
-    build:
-      context:  ./requirements/wordpress
-    networks:
-      - my_network
-    volumes:
-      - wordpress-data:/var/www/html
-    depends_on:
-      - mariadb
-    environment: 
-      MYSQL_HOST: ${MYSQL_HOST}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
-      WORDPRESS_TITLE: ${WORDPRESS_TITLE}
-      WORDPRESS_ADMIN_USER: ${WORDPRESS_ADMIN_USER}
-      WORDPRESS_ADMIN_PASSWORD: ${WORDPRESS_ADMIN_PASSWORD}
-      WORDPRESS_ADMIN_EMAIL: ${WORDPRESS_ADMIN_EMAIL}
-      WORDPRESS_USER: ${WORDPRESS_USER}
-      WORDPRESS_PASSWORD: ${WORDPRESS_PASSWORD}
-      WORDPRESS_EMAIL: ${WORDPRESS_EMAIL}
-    restart: always
-    init: true
 
   mariadb:
-    container_name: mariadb
-    build:
-      context:  ./requirements/mariadb
+    ports:
+      - "3306:3306"
+    image: mariadb
+    container_name: mariadb_c
+    build: 
+      context: ./requirements/mariadb
     networks:
-      - my_network
+      - mynetwork
+    restart: always
     volumes:
       - mariadb-data:/var/lib/mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
-      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    env_file: .env
+  wordpress:
+    ports:
+      - "9000:9000"
+    image: wordpress
+    container_name: wordpress_c
+    build: 
+      context: ./requirements/wordpress
+    networks:
+      - mynetwork
     restart: always
-    init: true
-
-networks:
-  my_network:
-    driver: bridge
-
+    volumes:
+      - wordpress-data:/var/www/html
+    env_file: .env
+    
 volumes:
   mariadb-data:
     name: mariadb-data
     driver: local
     driver_opts:
       type: none
+      device: /home/smorphet/data/mariadb-data
       o: bind
-      device: /home/smorphet/data/temp_volumes/mariadb-data
-
   wordpress-data:
     name: wordpress-data
     driver: local
     driver_opts:
       type: none
+      device: /home/smorphet/data/wordpress-data
       o: bind
-      device: /home/smorphet/data/temp_volumes/wordpress-data
+
+networks:
+  mynetwork:
+    name: mynetwork
