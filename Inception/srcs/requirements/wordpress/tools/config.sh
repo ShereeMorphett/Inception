@@ -7,7 +7,7 @@ done
 
 mkdir -p var/www/html/wordpress  /run/php/
 cd /var/www/html/
-if [ ! -f "/var/www/html/.wordpress_installed" ]; then
+# if [ ! -f "/var/www/html/.wordpress_installed" ]; then
 	#Download wordpress files
  	wp core download --allow-root
 	#create config with wp-cli
@@ -17,15 +17,15 @@ if [ ! -f "/var/www/html/.wordpress_installed" ]; then
 	#Create user
  	wp user create $WORDPRESS_USER $WORDPRESS_EMAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/html/
 	# install themes and plugins
-	wp theme install bravada --activate --allow-root
+	wp theme install twentysixteen --activate --allow-root
 	wp plugin update --all
  	# 
 	wp option update siteurl "https://$DOMAIN_NAME"
 	wp option update home "https://$DOMAIN_NAME"
 	touch /var/www/html/.wordpress_installed
-else
-	echo "wordpress already downloaded and setup"
-fi
+# else
+# 	echo "wordpress already downloaded and setup"
+# fi
 
 chown -R www:www /var/www/html
 chmod -R 775 /var/www/html

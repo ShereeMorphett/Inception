@@ -25,12 +25,19 @@ help:
 	@echo "  clean      - Clean up resources (stop and remove Docker containers)"
 	@echo "  help       - Display this help message"
 	@echo "  Debug      - Display the compose content and attempt to build containers"
-	@echo "  Total clean      - Clean up resources (stop, remove Docker containers AND delete volumes)"
+	@echo "  fclean      - Clean up resources (stop, remove Docker containers AND delete volumes)"
 
+.PHONY: add_servername
+add_servername:
+	if ! grep -q "smorphet.42.fr" /etc/hosts; then \
+		sudo echo "127.0.0.1 smorphet.42.fr" >> /etc/hosts; \
+	fi
+	if ! grep -q "www.smorphet.42.fr" /etc/hosts; then \
+		sudo echo "127.0.0.1    www.smorphet.42.fr" >> /etc/hosts; \
+	fi
 
 .PHONY: create_dirs
 create_dirs:
-	# @mkdir -p /Users/smorphet/data/temp_volumes/mariadb-data /Users/smorphet/data/temp_volumes/wordpress-data
 	@mkdir -p /home/smorphet/data/temp_volumes/mariadb-data /home/smorphet/data/temp_volumes/wordpress-data
 
 # Build Docker images and start Docker containers in the background
