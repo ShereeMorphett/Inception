@@ -34,6 +34,7 @@ create_dirs:
 # Build Docker images and start Docker containers in the background
 .PHONY: setup
 setup: create_dirs
+	@sudo pkill docker-pr || true
 	@echo $(GREEN) "Building and starting containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
@@ -56,13 +57,13 @@ debug:
 down:
 	@echo $(YELLOW) "Stopping and removing Docker containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
+	@sudo pkill docker-pr || true
 
 
 .PHONY: fclean
 fclean: down
-	@docker volume rm --force wordpress-data
-	@docker volume rm --force mariadb-data
-	@rm -rf $(DATA_PATH)/mariadb-data $(DATA_PATH)/wordpress-data
+	@docker system prune -af --volumes
+	@sudo rm -rf $(DATA_PATH)/mariadb-data $(DATA_PATH)/wordpress-data
 
 .PHONY: logs
 logs:

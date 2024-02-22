@@ -24,10 +24,6 @@ RUN chmod +x /usr/local/bin/wp
 
 RUN mkdir -p /var/www/html
 
-WORKDIR /var/www/html/
-
-EXPOSE 9000
-
 # Temporary infinite loop script to allow testing in the image
 COPY ./tools/config.sh /bin/config.sh
 COPY ./conf/www.conf /etc/php81/php-fpm.d/www.conf

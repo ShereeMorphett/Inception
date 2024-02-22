@@ -5,7 +5,7 @@ name: inception
 services:
   nginx:
     ports:
-      - "443:443"
+      - 443:443
     image: nginx
     container_name: nginx_c
     build: ./requirements/nginx
@@ -54,4 +54,4 @@ volumes:
 
 networks:
   mynetwork:
-    name: mynetwork
+    driver: bridge
