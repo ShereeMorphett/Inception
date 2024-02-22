@@ -5,7 +5,7 @@
 
 # Variables
 ENV_FILE	=	./srcs/.env
-DOCKER_COMPOSE := docker compose --env-file $(ENV_FILE)      # Command for Docker Compose
+DOCKER_COMPOSE := docker compose --env-file $(ENV_FILE)   
 DATA_PATH = /home/smorphet/data
 DOCKER_COMPOSE_FILE := srcs/docker-compose.yml              # Path to Docker Compose file
 RED='\033[0;31m'
@@ -22,11 +22,11 @@ NC='\033[0m' # No Color
 help:
 	@echo $(YELLOW) "Available targets:"               
 	@echo "  setup      - Set up the entire application using Docker"
-	@echo "  clean      - Clean up resources (stop and remove Docker containers)"
+	@echo "  Down      - Clean up resources (stop and remove Docker containers)"
 	@echo "  help       - Display this help message"
 	@echo "  Debug      - Display the compose content and attempt to build containers"
-	@echo "  fclean      - Clean up resources (stop, remove Docker containers AND delete volumes)"
-
+	@echo "  fclean      - Clean up resources (stop, remove Docker containers, delete volumes and prune)"
+	@echo "  restart      - restart containers"
 .PHONY: create_dirs
 create_dirs:
 	@mkdir -p /home/smorphet/data/mariadb-data /home/smorphet/data/wordpress-data
@@ -64,8 +64,3 @@ down:
 fclean: down
 	@docker system prune -af --volumes
 	@sudo rm -rf $(DATA_PATH)/mariadb-data $(DATA_PATH)/wordpress-data
-
-.PHONY: logs
-logs:
-	@echo $(YELLOW) "Watching logs..." $(NC)
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) logs -f
