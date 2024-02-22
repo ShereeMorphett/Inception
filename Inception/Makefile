@@ -40,7 +40,7 @@ setup: create_dirs
 	@echo $(GREEN) "Containers restarted successfully" $(NC)
 
 .PHONY: restart
-restart: clean setup
+restart: down setup
 	@echo $(GREEN) "Containers restarted successfully" $(NC)
 
 #Debugging compose file
@@ -52,19 +52,19 @@ debug:
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 
-.PHONY: stop
-stop:
-	docker compose -f srcs/docker-compose.yml -p ${PROJECT_NAME} stop
-	@echo $(GREEN) "Containers restarted successfully" $(NC)
-
 .PHONY: down
 down:
 	@echo $(YELLOW) "Stopping and removing Docker containers..." $(NC)
 	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 
-.PHONY: fclean
 
+.PHONY: fclean
 fclean: down
 	@docker volume rm --force wordpress-data
 	@docker volume rm --force mariadb-data
 	@rm -rf $(DATA_PATH)/mariadb-data $(DATA_PATH)/wordpress-data
+
+.PHONY: logs
+logs:
+	@echo $(YELLOW) "Watching logs..." $(NC)
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) logs -f
