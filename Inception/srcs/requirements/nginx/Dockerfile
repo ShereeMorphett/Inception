@@ -1,6 +1,6 @@
 FROM alpine:3.18.6
 
-# WORKDIR /etc/nginx/
+WORKDIR /etc/nginx/
 
 RUN apk update && \
 	apk --no-cache add openssl
@@ -14,8 +14,8 @@ RUN apk update && \
 
 RUN mkdir ./ssl && \
 	openssl req -x509 -newkey rsa:4096 \
-	-keyout ./ssl/smorphet.key -sha256 -days 365 -nodes \
-	-out ./ssl/smorphet.crt \
+	-keyout ./ssl/certificate.key -sha256 -days 365 -nodes \
+	-out ./ssl/certificate.crt \
 	-subj "/C=FI/ST=Helsinki/L=Helsinki/O=42 School/OU=smorphet/CN=smorphet.42.fr"
 
 COPY ./conf/default.conf ./http.d/default.conf

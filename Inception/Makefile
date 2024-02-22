@@ -5,7 +5,7 @@
 
 # Variables
 ENV_FILE	=	./srcs/.env
-DOCKER_COMPOSE := docker-compose --env-file $(ENV_FILE)      # Command for Docker Compose
+DOCKER_COMPOSE := docker compose --env-file $(ENV_FILE)      # Command for Docker Compose
 DATA_PATH = /home/smorphet/data
 DOCKER_COMPOSE_FILE := srcs/docker-compose.yml              # Path to Docker Compose file
 RED='\033[0;31m'
@@ -35,8 +35,8 @@ create_dirs:
 .PHONY: setup
 setup: create_dirs
 	@echo $(GREEN) "Building and starting containers..." $(NC)
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up #-d
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo $(GREEN) "Containers restarted successfully" $(NC)
 
 .PHONY: restart
@@ -49,22 +49,22 @@ debug:
 	@echo $(RED) "Docker Compose file content:" $(NC)
 	@cat $(DOCKER_COMPOSE_FILE)
 	@echo $(GREEN) "Building and starting containers..." $(NC)
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception build
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception up -d
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 
 .PHONY: stop
 stop:
 	docker compose -f srcs/docker-compose.yml -p ${PROJECT_NAME} stop
 	@echo $(GREEN) "Containers restarted successfully" $(NC)
 
-.PHONY: clean
-clean:
+.PHONY: down
+down:
 	@echo $(YELLOW) "Stopping and removing Docker containers..." $(NC)
-	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) -p inception down
+	@$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 
 .PHONY: fclean
 
-fclean: clean
+fclean: down
 	@docker volume rm --force wordpress-data
 	@docker volume rm --force mariadb-data
 	@rm -rf $(DATA_PATH)/mariadb-data $(DATA_PATH)/wordpress-data
